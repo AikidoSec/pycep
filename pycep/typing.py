@@ -10,9 +10,7 @@ PossibleNoneValue: TypeAlias = "PossibleValue | None"
 ModulePath: TypeAlias = "LocalModulePath | BicepRegistryModulePath | BicepRegistryAliasModulePath | TemplateSpecModulePath | TemplateSpecAliasModulePath"
 ModuleDetail: TypeAlias = "_LocalModulePathDetail | _BicepRegistryModulePathDetail | _BicepRegistryAliasModulePathDetail | _TemplateSpecModulePathDetail | _TemplateSpecAliasModulePathDetail"
 LoopType: TypeAlias = "LoopArray | LoopArrayIndex | LoopObject | LoopRange"
-ElementResponse: TypeAlias = (
-    "ParamResponse | VarResponse | ResourceResponse | ModuleResponse | OutputResponse | TypeResponse"
-)
+ElementResponse: TypeAlias = "ImportResponse | ParamResponse | VarResponse | ResourceResponse | ModuleResponse | OutputResponse | TypeResponse | ExtensionResponse"
 Decorator: TypeAlias = "DecoratorAllowed | DecoratorBatchSize | DecoratorDescription | DecoratorMinLength | DecoratorMaxLength | DecoratorMinValue | DecoratorMaxValue | DecoratorMetadata | DecoratorSecure"
 
 ComparisonOperators: TypeAlias = "GreaterThanOrEquals | GreaterThan | LessThanOrEquals | LessThan | Equals | NotEquals | EqualsCaseInsensitive | NotEqualsCaseInsensitive"
@@ -66,6 +64,27 @@ class ScopeResponse(TypedDict):
     globals: _Scope
 
 
+class ImportAttributes(TypedDict):
+    alias: NotRequired[str]
+    file_path: NotRequired[str]
+    __start_line__: NotRequired[int]
+    __end_line__: NotRequired[int]
+
+
+class _Import(TypedDict):
+    __name__: str
+    __attrs__: ImportAttributes
+
+
+class ImportResponse(TypedDict):
+    imports: _Import
+
+
+class ImportNameAlias(TypedDict):
+    name: str
+    alias: NotRequired[str]
+
+
 class MetadataAttributes(TypedDict):
     value: str
     __start_line__: NotRequired[int]
@@ -79,6 +98,22 @@ class _Metadata(TypedDict):
 
 class MetadataResponse(TypedDict):
     metadata: _Metadata
+
+
+class ExtensionAttributes(TypedDict):
+    alias: NotRequired[str]
+    config: NotRequired[dict[str, Any]]
+    __start_line__: NotRequired[int]
+    __end_line__: NotRequired[int]
+
+
+class _Extension(TypedDict):
+    __name__: str
+    __attrs__: ExtensionAttributes
+
+
+class ExtensionResponse(TypedDict):
+    extensions: _Extension
 
 
 class ParameterAttributes(TypedDict):
@@ -100,6 +135,7 @@ class ParamResponse(TypedDict):
 
 class VariableAttributes(TypedDict):
     decorators: list[Decorator]
+    type: NotRequired[str]
     value: PossibleValue
     __start_line__: NotRequired[int]
     __end_line__: NotRequired[int]
@@ -1256,6 +1292,7 @@ class PropertyAccessor(TypedDict):
 
 class BicepJson(TypedDict):
     globals: GlobalsAttributes
+    imports: NotRequired[dict[str, ImportAttributes]]
     parameters: NotRequired[dict[str, ParameterAttributes]]
     variables: NotRequired[dict[str, VariableAttributes]]
     resources: NotRequired[dict[str, ResourceAttributes]]
