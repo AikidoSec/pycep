@@ -389,7 +389,7 @@ EXISTING: "existing"
 STRING: /(?!(sys|az)\.)[a-zA-Z_]([\w_])*/
 QUOTED_STRING: "'" /[a-zA-Z_]([\w_.])*/ "'"
 INDEXED: /(?=[\w][\w_.]+(.(get|list)[a-zA-Z]*\(('[\w-]+'|[\w.]+)?\)|[\[\]])+)(.(get|list)[a-zA-Z]*\(('[\w-]+'|[\w.]+)?\)|\[[\w\[\]_().']+\]|[\w_\-\/.,'= ])+/
-QUOTED_INTERPOLATION: /(?!.*''')'(\${(?:[^}'{]+|(?R))*+}|\\'|[^'])*'/
+QUOTED_INTERPOLATION: /(?!''')(?P<_quoted_interpolation>'(?:\${(?:[^}'{']+|(?&_quoted_interpolation))*+}|\\'|[^'])*')/
 LIST_FUNC_NAME: /(?=([Ll]ist[A-za-z]*|getSecret)\()([A-Za-z]+)/
 
 MULTI_LINE_STRING: "'''" (/.*?/ | NEWLINE)+ "'''"
